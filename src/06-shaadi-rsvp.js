@@ -47,16 +47,58 @@
  */
 export function processGuests(guests, filterFn) {
   // Your code here
+  if(!Array.isArray(guests) || typeof filterFn !== "function"){
+    return []
+  }
+  const result = [];
+  for (const guest of guests) {
+    if(filterFn(guest)){
+      result.push(guest)
+    }    
+  }
+
+  return result;
 }
 
 export function notifyGuests(guests, notifyCallback) {
   // Your code here
+  if(!Array.isArray(guests) || typeof notifyCallback !== "function"){
+    return []
+  }
+
+  const messages = [];
+  for (const guest of guests) {
+    const result = notifyCallback(guest);
+    messages.push(result);
+  }
+  return messages;
 }
 
 export function handleRSVP(guest, onAccept, onDecline) {
   // Your code here
+  if(!guest || typeof onAccept !== "function" || typeof onDecline !== "function"){
+    return null;
+  }
+  if(guest.rsvp === "yes"){
+    return onAccept(guest);
+  }else if (guest.rsvp === "no"){
+    return onDecline(guest);
+  }else {
+    return null
+  }
 }
 
 export function transformGuestList(guests, ...transformFns) {
   // Your code here
+  if(!Array.isArray(guests)){
+    return []
+  }
+
+  let currentList = [...guests];
+  for (const fn of transformFns) {
+    if(typeof fn === "function"){
+      currentList = fn(currentList);
+    }
+  }
+  return currentList;
 }

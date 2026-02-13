@@ -54,28 +54,59 @@
  */
 export function pipe(...fns) {
   // Your code here
+  return function(x){
+    if (fns.length === 0) return x;
+    return fns.reduce((acc, fn) => {
+      return fn(acc);
+    }, x);
+  };
 }
 
 export function compose(...fns) {
   // Your code here
+  return function(x) {
+    if (fns.length === 0) return x;
+    return fns.reduceRight((acc, fn) => {
+      return fn(acc);
+    }, x);
+  };
 }
 
 export function grind(spice) {
   // Your code here
+  return { ...spice, form: "powder" };
 }
 
 export function roast(spice) {
   // Your code here
+  return { ...spice, roasted: true, aroma: "strong" };
 }
 
 export function mix(spice) {
   // Your code here
+  return { ...spice, mixed: true };
 }
 
 export function pack(spice) {
   // Your code here
+  return { ...spice, packed: true, label: `${spice.name} Masala` };
 }
 
 export function createRecipe(steps) {
   // Your code here
+  if (!Array.isArray(steps) || steps.length === 0) {
+    return (x) => x; // The identity function
+  }
+
+  const tools = {
+    grind: grind,
+    roast: roast,
+    mix: mix,
+    pack: pack
+  };
+
+  const activeFunctions = steps
+    .map(stepName => tools[stepName])
+    .filter(fn => typeof fn === "function"); 
+  return pipe(...activeFunctions);
 }

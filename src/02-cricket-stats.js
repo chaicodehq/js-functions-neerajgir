@@ -39,20 +39,56 @@
  */
 export const calcStrikeRate = (runs, balls) => {
   // Your code here
+  if (runs < 0 || balls <= 0) {
+    return 0;
+  }
+
+  const strikeRate = (runs / balls) * 100;
+  return Math.round(strikeRate * 100) / 100;
 };
 
 export const calcEconomy = (runsConceded, overs) => {
   // Your code here
+  if(overs <= 0 || runsConceded < 0){
+    return 0;
+  }
+
+  const calculateRun = runsConceded / overs;
+  
+  return Math.round(calculateRun * 100) / 100;
 };
 
 export const calcBattingAvg = (totalRuns, innings, notOuts = 0) => {
   // Your code here
+  const timeOut = innings - notOuts;
+  if (timeOut <= 0) return 0;
+  
+  const result = totalRuns / timeOut; 
+  return Math.round(result * 100) / 100;
 };
 
 export const isAllRounder = (battingAvg, economy) => {
   // Your code here
+  return battingAvg > 30 && economy < 8;
 };
 
 export const getPlayerCard = (player) => {
   // Your code here
+  if(!player || !player.name ){
+    return null;
+  }
+
+  let sr = calcStrikeRate(player.runs, player.balls);
+  let econ = calcEconomy(player.runsConceded, player.overs);
+  let avg = calcBattingAvg(player.totalRuns, player.innings, player.notOuts);
+  let allRounder = isAllRounder(avg, econ);
+
+
+  return { 
+  name: player.name, 
+  strikeRate: sr, 
+  economy: econ, 
+  battingAvg: avg, 
+  isAllRounder: allRounder 
+};
 };
